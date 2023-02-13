@@ -3,20 +3,20 @@ import { Transition } from '@headlessui/react';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { clsx } from 'clsx';
 import React, { Fragment } from 'react';
+import Button from './Button';
 
-interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
-  size?: 'small' | 'medium' | 'large';
-  children: React.ReactNode;
+interface HistoryModalProps {
+  previousBids: { timestamp: Date; amount: number; currency: string }[];
 }
 
-export const Modal = (props: ModalProps) => {
-  const { children, ...rest } = props;
+export const HistoryModal = (props: HistoryModalProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const { previousBids } = props;
   return (
-    <div {...rest}>
+    <div>
       <DialogPrimitive.Root open={isOpen} onOpenChange={setIsOpen}>
         <DialogPrimitive.Trigger asChild>
-          <button>Click</button>
+          <Button>See your bid history</Button>
         </DialogPrimitive.Trigger>
         <DialogPrimitive.Portal forceMount>
           <Transition.Root show={isOpen}>
@@ -46,65 +46,39 @@ export const Modal = (props: ModalProps) => {
                   'fixed z-50',
                   'w-[95vw] max-w-md rounded-lg p-4 md:w-full',
                   'top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]',
-                  'bg-white dark:bg-gray-800',
+                  'bg-white ',
                   'focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75',
                 )}
               >
-                <DialogPrimitive.Title className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  Edit profile
+                <DialogPrimitive.Title className="text-sm font-medium text-gray-90">
+                  Bids History
                 </DialogPrimitive.Title>
-                <DialogPrimitive.Description className="mt-2 text-sm font-normal text-gray-700 dark:text-gray-400">
-                  Make changes to your profile here. Click save when you&apos;re done.
+                <DialogPrimitive.Description className="mt-2 text-sm font-normal text-gray-700">
+                  <div className="table w-full">
+                    <div className="table-header-group">
+                      <div className="table-row">
+                        <div className="table-cell text-left">Time</div>
+                        <div className="table-cell text-left">Amount</div>
+                      </div>
+                    </div>
+                    <div className="table-row-group">
+                      {previousBids.map((bid) => (
+                        <div className="table-row">
+                          <div className="table-cell py-2">{bid.timestamp.toLocaleString()}</div>
+                          <div className="table-cell py-2">
+                            {bid.currency} {bid.amount}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </DialogPrimitive.Description>
-                <form className="mt-2 space-y-2">
-                  <fieldset>
-                    {/* <legend>Choose your favorite monster</legend> */}
-                    <label
-                      htmlFor="firstName"
-                      className="text-xs font-medium text-gray-700 dark:text-gray-400"
-                    >
-                      First Name
-                    </label>
-                    <input
-                      id="firstName"
-                      type="text"
-                      placeholder="Tim"
-                      autoComplete="given-name"
-                      className={clsx(
-                        'mt-1 block w-full rounded-md px-2 py-2',
-                        'text-sm text-gray-700 placeholder:text-gray-500 dark:text-gray-400 dark:placeholder:text-gray-600',
-                        'border border-gray-400 focus-visible:border-transparent dark:border-gray-700 dark:bg-gray-800',
-                        'focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75',
-                      )}
-                    />
-                  </fieldset>
-                  <fieldset>
-                    <label
-                      htmlFor="familyName"
-                      className="text-xs font-medium text-gray-700 dark:text-gray-400"
-                    >
-                      Family Name
-                    </label>
-                    <input
-                      id="familyName"
-                      type="text"
-                      placeholder="Cook"
-                      autoComplete="family-name"
-                      className={clsx(
-                        'mt-1 block w-full rounded-md px-2 py-2',
-                        'text-sm text-gray-700 placeholder:text-gray-500 dark:text-gray-400 dark:placeholder:text-gray-600',
-                        'border border-gray-400 focus-visible:border-transparent dark:border-gray-700 dark:bg-gray-800',
-                        'focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75',
-                      )}
-                    />
-                  </fieldset>
-                </form>
 
                 <div className="mt-4 flex justify-end">
                   <DialogPrimitive.Close
                     className={clsx(
                       'inline-flex select-none justify-center rounded-md px-4 py-2 text-sm font-medium',
-                      'bg-purple-600 text-white hover:bg-purple-700 dark:bg-purple-700 dark:text-gray-100 dark:hover:bg-purple-600',
+                      'bg-purple-600 text-white hover:bg-purple-700 dark:hover:bg-purple-600',
                       'border border-transparent',
                       'focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75',
                     )}

@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { WrappedBid } from './Bid';
+import { Currency, WrappedBid } from './Bid';
 
 export default {
   title: 'Common UI/Bid',
@@ -13,7 +13,16 @@ export default {
 const Template: ComponentStory<typeof WrappedBid> = (args) => <WrappedBid {...args} />;
 
 export const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+  previousBids: [
+    { timestamp: new Date(), amount: 300, currency: 'USD' as Currency },
+    { timestamp: new Date(), amount: 300, currency: 'USD' as Currency },
+    { timestamp: new Date(), amount: 300, currency: 'USD' as Currency },
+    { timestamp: new Date(), amount: 5400, currency: 'GPB' as Currency },
+    { timestamp: new Date(), amount: 300, currency: 'USD' as Currency },
+    { timestamp: new Date(), amount: 300, currency: 'EUR' as Currency },
+  ],
+};
 
 export const Loading = Template.bind({});
 Loading.args = {

@@ -6,7 +6,7 @@ module.exports = {
   },
   plugins: [
     // Initialize with default values (see options below)
-    require("tailwindcss-radix")(),
+    require('tailwindcss-radix')(),
   ],
-  content: ["./**/*.{html,js,tsx}"],
+  content: ['./src/**/*.{html,js,tsx}'],
 };

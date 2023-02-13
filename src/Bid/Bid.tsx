@@ -3,8 +3,15 @@ import { Input } from './Input';
 import Button from './Button';
 import { Select } from './Select';
 import localStorageProvider from '../utils/localStorageProvider';
+import { useReducer } from 'react';
+import { useExchangeRate } from '../hooks/useExchangeRate';
+import { HistoryModal } from './HistoryModal';
 
-type Currency = 'USD' | 'EUR' | 'GBP';
+export enum Currency {
+  USD = 'USD',
+  EUR = 'EUR',
+  GBP = 'GBP',
+}
 
 type BidProps = {
   isLoading?: boolean;
@@ -14,23 +21,54 @@ type BidProps = {
   onBid: (amount: number, currency: Currency) => void;
 };
 
+const reducer = (state: any, action: any) => {
+  switch (action.type) {
+    case 'editcurrentbid':
+      return { ...state, currentBid: action.payload.newBid };
+    case 'changecurrency':
+      return {
+        ...state,
+        currency: action.payload.currency,
+        currentBid: (
+          state.currentBid * action.payload.exchangeRate[action.payload.currency]
+        ).toFixed(2),
+      };
+    default:
+      return state;
+  }
+};
+
 const Bid = (props: BidProps) => {
-  const { isLoading, error, success, previousBids, onBid } = props;
+  const { isLoading, error, success, onBid, previousBids } = props;
+  const [state, dispatch] = useReducer(reducer, { currentBid: 0, currency: 'USD' });
+  const currencyList: string[] = Object.values(Currency);
+  const { data: exchangeRate } = useExchangeRate(state.currency, currencyList);
   return (
     <div className="p-10">
       <div>
         <form
           className="w-full flex flex-wrap"
           onSubmit={(e) => {
+            onBid(state.currentBid, state.currency);
             e.preventDefault();
-            console.log('submitted');
           }}
         >
           <div className="w-full md:w-52 px-3 mb-6 md:mb-0">
-            <Input value="" onChange={() => {}} disabled={isLoading} isLoading={isLoading} />
+            <Input
+              value={state.currentBid}
+              onChange={(newBid) => dispatch({ type: 'editcurrentbid', payload: { newBid } })}
+              disabled={isLoading}
+              isLoading={isLoading}
+            />
           </div>
           <div className="w-full md:w-28 px-3 mb-6 md:mb-0">
-            <Select disabled={isLoading}></Select>
+            <Select
+              disabled={isLoading}
+              onChange={(currency: Currency) =>
+                dispatch({ type: 'changecurrency', payload: { currency, exchangeRate } })
+              }
+              options={currencyList}
+            ></Select>
           </div>
           <div className="w-full md:w-44 px-3 mb-6 md:mb-0">
             <Button disabled={isLoading} isLoading={isLoading}>
@@ -38,7 +76,7 @@ const Bid = (props: BidProps) => {
             </Button>
           </div>
           <div className="w-full md:w-96 px-3 mb-6 md:mb-0">
-            <Button disabled={isLoading}>See your bid history</Button>
+            <HistoryModal previousBids={previousBids} />
           </div>
         </form>
       </div>

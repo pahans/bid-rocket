@@ -1,5 +1,4 @@
-type AppProps = {};
-export function App(props: AppProps) {
+export function App() {
   return (
     <div className="App">
       <h1>Bid Rocket</h1>

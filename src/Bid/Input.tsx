@@ -5,7 +5,7 @@ type InputProps = {
   placeholder?: string;
   autoComplete?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: string) => void;
   disabled?: boolean;
   isLoading?: boolean;
 };
@@ -16,6 +16,8 @@ export const Input = (props: InputProps) => {
       id="firstName"
       type="number"
       step="0.01"
+      value={props.value}
+      onChange={(e) => props.onChange(e.target.value)}
       autoComplete="given-name"
       className={clsx(
         'w-full mt-1 rounded-md px-2 py-2',

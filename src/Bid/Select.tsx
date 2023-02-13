@@ -9,14 +9,15 @@ type SelectProps = {
   placeholder?: string;
   autoComplete?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChange: (currency: any) => void;
+  options: string[];
 };
 
 export const Select = (props: SelectProps) => {
-  const { disabled } = props;
+  const { disabled, onChange, options } = props;
   return (
-    <SelectPrimitive.Root defaultValue="eur" disabled={disabled}>
-      <SelectPrimitive.Trigger asChild aria-label="Food">
+    <SelectPrimitive.Root defaultValue="USD" disabled={disabled} onValueChange={onChange}>
+      <SelectPrimitive.Trigger asChild aria-label="Currency">
         <Button>
           <SelectPrimitive.Value />
           <SelectPrimitive.Icon className="ml-2">
@@ -30,11 +31,10 @@ export const Select = (props: SelectProps) => {
         </SelectPrimitive.ScrollUpButton>
         <SelectPrimitive.Viewport className="bg-white p-2 rounded-lg shadow-lg">
           <SelectPrimitive.Group>
-            {['USD', 'EUR', 'GBP'].map((f, i) => (
+            {options.map((f, i) => (
               <SelectPrimitive.Item
-                disabled={f === 'EUR'}
                 key={`${f}-${i}`}
-                value={f.toLowerCase()}
+                value={f}
                 className={clsx(
                   'relative flex items-center px-8 py-2 rounded-md text-sm text-gray-700 font-medium focus:bg-gray-100',
                   'radix-disabled:opacity-50',
