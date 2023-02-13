@@ -7,8 +7,8 @@ VITE_EX_RATE_API_KEY=
 VITE_EXCHANGE_API_URL=
 ```
 
-npm install
-npm run storybook
+yarn install
+yarn storybook
 
 ### Hosted URL
 
