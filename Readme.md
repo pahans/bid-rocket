@@ -7,5 +7,9 @@ VITE_EX_RATE_API_KEY=
 VITE_EXCHANGE_API_URL=
 ```
 
-yarn
-yarn storybook
+npm install
+npm run storybook
+
+### Hosted URL
+
+http://bid-rocket.vercel.app

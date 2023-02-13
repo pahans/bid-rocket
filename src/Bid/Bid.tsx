@@ -39,10 +39,13 @@ const reducer = (state: any, action: any) => {
 };
 
 const Bid = (props: BidProps) => {
-  const { isLoading, error, success, onBid, previousBids } = props;
+  const { isLoading, error, success, onBid, previousBids = [] } = props;
   const [state, dispatch] = useReducer(reducer, { currentBid: 0, currency: 'USD' });
   const currencyList: string[] = Object.values(Currency);
   const { data: exchangeRate } = useExchangeRate(state.currency, currencyList);
+  if (!isLoading && !exchangeRate) {
+    return <div>Could not fetch Exchange rates, please make sure API Key is set.</div>;
+  }
   return (
     <div className="p-10">
       <div>
